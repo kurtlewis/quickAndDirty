@@ -16,7 +16,7 @@ for i in range(2, 223):
     name = name.lower()
     checkinNames.append(name)
 
-for i in range(1, 241):
+for i in range(1, 300):
     name = resume.cell(row=i, column=1).internal_value
     name = name.lower()
     resumeNames.append(name)

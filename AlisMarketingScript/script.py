@@ -56,8 +56,8 @@ def main():
     twitterTweets = re.compile("title=\"([\d,]*) Tweets")
     facebookLikes = re.compile(">([\d,]*) people like this<")
     facebookFollowers = re.compile("<div>([\d,]*) people follow this</div>")
-    instagramFollowers = re.compile("([\d,km]*) Followers")
-    instagramPosts = re.compile("Following, ([\d,k]*) Posts")
+    instagramFollowers = re.compile("([\d,.km]*) Followers")
+    instagramPosts = re.compile("Following, ([\d,.k]*) Posts")
     youtubeSubscribers = re.compile("=\"([\d,]*) subscribers")
     pinterestFollowers = re.compile("name=\"pinterestapp:followers\" content=\"([\d,]*)\"")
     #pinterestFollowers = re.compile(">([\d,]*)</span> <span class='label '>Followers") # Doesn't work?

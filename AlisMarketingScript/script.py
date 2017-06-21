@@ -15,6 +15,8 @@ import os.path
 Get's HTML of page for parsing
 """
 def getHtml(url, trys=0):
+    if url == "":
+        return ""
     try:
         return str(urllib.request.urlopen(url).read())
     except:
@@ -32,7 +34,10 @@ def searchStr(regex, string):
     try:
         return regex.search(string).group(1)
     except AttributeError:
-        print("Could not find Regex!")
+        if string == "":
+            print("No data found")
+            return "NO DATA"
+        print("Could not find regex but a page existed")
         return "ERROR"
 
 
@@ -54,8 +59,8 @@ def writeToCsv(company, outputRow):
 def main():
     twitterFollowers = re.compile("title=\"([\d,]*) Followers")
     twitterTweets = re.compile("title=\"([\d,]*) Tweets")
-    facebookLikes = re.compile(">([\d,]*) people like this<")
-    facebookFollowers = re.compile("<div>([\d,]*) people follow this</div>")
+    facebookLikes = re.compile("([\d,]*) people like this")
+    facebookFollowers = re.compile("([\d,]*) people follow this")
     instagramFollowers = re.compile("([\d,.km]*) Followers")
     instagramPosts = re.compile("Following, ([\d,.k]*) Posts")
     youtubeSubscribers = re.compile("=\"([\d,]*) subscribers")
@@ -69,31 +74,38 @@ def main():
             company = row[0]
             print("Now scraping for " + company)
             output.append(time.strftime('%d %b %Y, %H:%M', time.gmtime()))
-            for url in row[1:]:
-                page = getHtml(url)
-                if 'twitter' in url:
-                    followers = searchStr(twitterFollowers, page)
-                    tweets = searchStr(twitterTweets, page)
-                    output.append(followers)
-                    output.append(tweets)
-                if 'facebook' in url:
-                    likes = searchStr(facebookLikes, page)
-                    followers = searchStr(facebookFollowers, page)
-                    output.append(likes)
-                    output.append(followers)
-                    output.append("NO DATA") # No data for facebook post numbers
-                if 'instagram' in url:
-                    followers = searchStr(instagramFollowers, page)
-                    posts = searchStr(instagramPosts, page)
-                    output.append(followers)
-                    output.append(posts)
-                if 'youtube' in url:
-                    subscribers = searchStr(youtubeSubscribers, page)
-                    output.append(subscribers)
-                    output.append("NO DATA") # No data for youtube video numbers
-                if 'pinterest' in url:
-                    followers = searchStr(pinterestFollowers, page)
-                    output.append(followers)
+            # Twitter
+            page = getHtml(row[1])
+            followers = searchStr(twitterFollowers, page)
+            tweets = searchStr(twitterTweets, page)
+            output.append(followers)
+            output.append(tweets)
+
+            # Facebook
+            page = getHtml(row[2])
+            likes = searchStr(facebookLikes, page)
+            followers = searchStr(facebookFollowers, page)
+            output.append(likes)
+            output.append(followers)
+            output.append("NO DATA") # No data for facebook post numbers
+
+            # Instagram
+            page = getHtml(row[3])
+            followers = searchStr(instagramFollowers, page)
+            posts = searchStr(instagramPosts, page)
+            output.append(followers)
+            output.append(posts)
+
+            # Youtube
+            page = getHtml(row[4])
+            subscribers = searchStr(youtubeSubscribers, page)
+            output.append(subscribers)
+            output.append("NO DATA") # No data for youtube video numbers
+
+            # Pinterest
+            page = getHtml(row[5])
+            followers = searchStr(pinterestFollowers, page)
+            output.append(followers)
             writeToCsv(company, output)
 
 

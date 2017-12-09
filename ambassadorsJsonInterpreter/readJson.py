@@ -13,7 +13,7 @@ I did that using this direct from the python CLI
 file = open("memberInfo.json", 'r')
 content = file.read()
 file.close()
-content = content.close("}\n{", "},\n{")
+content = content.replace("}\n{", "},\n{")
 file = open("memberInfo2.json", 'w')
 file.write(content)
 file.close()
